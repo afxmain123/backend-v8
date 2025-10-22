@@ -32,7 +32,11 @@ on:
         default: true
         required: false
 
-  
+      build_linux:
+        description: 'Build for linux platform'
+        type: boolean
+        default: true
+        required: false  
 
 jobs:
   build_linux:
