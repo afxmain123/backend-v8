@@ -35,35 +35,22 @@ on:
   
 
 jobs:
-  build_windows:
-    if: github.event.inputs.build_windows == 'true'
-    name: Windows
-    runs-on: windows-latest
+  build_linux:
+    if: github.event.inputs.build_linux == 'true'
+    name: Linux
+    runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
-    - name: install llvm
-      if: ${{ github.event.inputs.wrap_new == 'true' }}
-      shell: pwsh
-      run: choco install llvm
-    - name: Install VS2019 Build Tools
-      shell: pwsh
-      run: choco install visualstudio2019buildtools --package-parameters "--add Microsoft.VisualStudio.Workload.VCTools --includeRecommended"
-    - uses: ilammy/msvc-dev-cmd@v1
-      with:
-        vsversion: '2019'
     - name: Run build script
-      shell: cmd
       run: |
-        cd %GITHUB_WORKSPACE%
-        call npm i
-        call .\my_windows_64.cmd ${{github.event.inputs.v8_revision}} ${{github.event.inputs.wrap_new}}
-    - name: Rename
-      shell: bash
-      run: |
+        cd $GITHUB_WORKSPACE
+        npm i
+        bash ./mylinux.sh ${{github.event.inputs.v8_revision}} ${{github.event.inputs.wrap_new}}
         mv ~/v8/v8/output/v8 ~/v8/v8/output/v8_${{github.event.inputs.v8_revision}}
     - uses: actions/upload-artifact@v4
       with:
-        name: v8_bin_windows
+        name: v8_bin_linux
         path: ~/v8/v8/output/**/*
+        
         
   
